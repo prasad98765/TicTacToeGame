@@ -2,20 +2,22 @@
 
 echo "WECLOME : To TicTacToe Game"
 
-Arr=(. . . . . . . . .)
+gameBoard=(. . . . . . . . .)
 	echo "r\c 0 1 2"
-	echo "0   ${Arr[0]} ${Arr[1]} ${Arr[2]}"
-	echo "1   ${Arr[3]} ${Arr[4]} ${Arr[5]}"
-	echo "2   ${Arr[6]} ${Arr[7]} ${Arr[8]}"
+	echo "0   ${gameBoard[0]} ${gameBoard[1]} ${gameBoard[2]}"
+	echo "1   ${gameBoard[3]} ${gameBoard[4]} ${gameBoard[5]}"
+	echo "2   ${gameBoard[6]} ${gameBoard[7]} ${gameBoard[8]}"
 
 function getAssignedLetter()
 {
 
 	if [ $((RANDOM%2)) -eq 1 ]
 	then
-			echo "Player 1 Symbol X"
+			echo "player 1 "
+			echo "Player Symbol X"
 	else
-			echo "Player 2 Symbol 0"
+			echo "player 2 "
+			echo "Player Symbol x"
 	fi
 
 }
