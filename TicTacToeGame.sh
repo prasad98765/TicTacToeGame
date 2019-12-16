@@ -21,6 +21,5 @@ function getAssignedLetter()
 	fi
 
 }
-
 getAssignedLetter
 
