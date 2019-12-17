@@ -2,11 +2,16 @@
 
 echo "WECLOME : To TicTacToe Game"
 
-gameBoard=(. . . . . . . . .)
-	echo "r\c 0 1 2"
-	echo "0   ${gameBoard[0]} ${gameBoard[1]} ${gameBoard[2]}"
-	echo "1   ${gameBoard[3]} ${gameBoard[4]} ${gameBoard[5]}"
-	echo "2   ${gameBoard[6]} ${gameBoard[7]} ${gameBoard[8]}"
+	gameBoard=(1 2 3 4 5 6 7 8 9)
+	echo "r\c 0   1   2"
+
+	echo "0   ${gameBoard[0]} | ${gameBoard[1]} | ${gameBoard[2]}"
+	echo 		"---------------"
+	echo "1   ${gameBoard[3]} | ${gameBoard[4]} | ${gameBoard[5]}"
+	echo 		"---------------"
+	echo "2   ${gameBoard[6]} | ${gameBoard[7]} | ${gameBoard[8]}"
+
+
 
 function getAssignedLetter()
 {
