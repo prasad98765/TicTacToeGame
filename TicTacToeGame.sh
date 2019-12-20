@@ -15,6 +15,7 @@ cornerSides=( 1 3 7 9 )
 count=0
 flag=0
 temp=0
+stop=50
 
 #TO PRINT TIC TAC TOE BOARD
 function printBoard()
@@ -36,12 +37,12 @@ function getAssignedSymbol()
 	if [ $((RANDOM%2)) -eq 1 ]
 	then
 		PLAYER_LETTER="X"
-		COMPUTER_LETTER="O"
+		COMPUTER_LETTER="Y"
 		echo "Player Letter" $PLAYER_LETTER
 		echo "Computer Letter" $COMPUTER_LETTER
 		flag=0
    else
-		PLAYER_LETTER="0"
+		PLAYER_LETTER="Y"
 		COMPUTER_LETTER="X"
 		echo "Player Letter" $PLAYER_LETTER
 		echo "Computer Letter" $COMPUTER_LETTER
@@ -77,28 +78,28 @@ function rowPositionHint()
 {
 
 	temp=0
-   for (( hintCell=0; hintCell<$TOTAL_POSITION; hintCell=$(($hintCell+3)) ))
-   do
-  		if [[ ${gameBoard[$hintCell]} == ${gameBoard[$hintCell+1]} ]]
-      then
-      	temp=1
-         echo ${gameBoard[(($hintCell+2))]}
-         break
-      elif [[ ${gameBoard[$hintCell+1]} == ${gameBoard[$hintCell+2]} ]]
+	for (( hintCell=0; hintCell<$TOTAL_POSITION; hintCell=$(($hintCell+3)) ))
+	do
+		if [[ ${gameBoard[$hintCell]} == ${gameBoard[$hintCell+1]} ]]
 		then
-         temp=1
-         echo ${gameBoard[(($hintCell))]}
-         break
-      elif [[ ${gameBoard[$hintCell]} == ${gameBoard[$hintCell+2]} ]]
-      then
-        	temp=1
-         echo ${gameBoard[(($hintCell+1))]}
-         break
+			temp=1
+			echo ${gameBoard[(($hintCell+2))]}
+		break
+		elif [[ ${gameBoard[$hintCell+1]} == ${gameBoard[$hintCell+2]} ]]
+		then
+			temp=1
+			echo ${gameBoard[(($hintCell))]}
+		break
+		elif [[ ${gameBoard[$hintCell]} == ${gameBoard[$hintCell+2]} ]]
+		then
+			temp=1
+			echo ${gameBoard[(($hintCell+1))]}
+		break
 		fi
 	done
 	if [[ $temp -eq 0 ]]
 	then
-		echo $temp
+		echo $stop
 	fi
 
 }
@@ -107,28 +108,28 @@ function rowPositionHint()
 function columnPositionHint()
 {
 
-	for (( hintCell=1; hintCell<=$TOTAL_POSITION; hintCell=$(($hintCell+1)) ))
+	for (( hintCell=0; hintCell<3; hintCell=$(($hintCell+1)) ))
 	do
-      if [[ ${gameBoard[$hintCell]} == ${gameBoard[$hintCell+3]} ]]
-      then
-      	temp=1
-         echo ${gameBoard[(($hintCell+6))]}
-         break
-      elif [[ ${gameBoard[$hintCell]} == ${gameBoard[$hintCell+6]} ]]
-      then
-         temp=1
-         echo ${gameBoard[(($hintCell+3))]}
-         break
-      elif [[ ${gameBoard[$hintCell+3]} == ${gameBoard[$hintCell+6]} ]]
-      then
-         temp=1
-        	echo ${gameBoard[(($hintCell))]}
-         break
-      fi
-   done
+		if [[ ${gameBoard[$hintCell]} == ${gameBoard[$hintCell+3]} ]]
+		then
+			temp=1
+			echo ${gameBoard[(($hintCell+6))]}
+		break
+		elif [[ ${gameBoard[$hintCell]} == ${gameBoard[$hintCell+6]} ]]
+		then
+			temp=1
+			echo ${gameBoard[(($hintCell+3))]}
+		break
+		elif [[ ${gameBoard[$hintCell+3]} == ${gameBoard[$hintCell+6]} ]]
+		then
+			temp=1
+			echo ${gameBoard[(($hintCell))]}
+		break
+		fi
+	done
 	if [[ $temp -eq 0 ]]
 	then
-		echo $temp
+		echo $stop
 	fi
 
 }
@@ -138,17 +139,17 @@ function diagonalPositionHint()
 {
 
 	if [[ ${gameBoard[0]} == ${gameBoard[4]} ]]
-   then
+	then
 		temp=1
 		echo ${gameBoard[8]}
 	elif [[ ${gameBoard[0]} == ${gameBoard[8]} ]]
-   then
+	then
 		temp=1
-      echo ${gameBoard[4]}
+		echo ${gameBoard[4]}
 	elif [[ ${gameBoard[4]} == ${gameBoard[8]} ]]
 	then
 		temp=1
-      echo ${gameBoard[0]}
+		echo ${gameBoard[0]}
 	elif [[ ${gameBoard[2]} == ${gameBoard[4]} ]]
 	then
 		temp=1
@@ -164,7 +165,7 @@ function diagonalPositionHint()
 	fi
 	if [[ $temp -eq 0 ]]
 	then
-			echo $temp
+		echo $stop
 	fi
 
 }
@@ -173,48 +174,51 @@ function diagonalPositionHint()
 function possibleCorner()
 {
 
-	sides=0
-	for (( corners=0; corners<=8; corners++ ))
+	for (( i=0; i<4; i++ ))
 	do
-			if [[ ${gameBoard[$corners]} -eq ${cornerSides[$sides]} ]]
-			then
-				echo $corners
-				break
-			else
-				sides=$(( $sides + 1 ))
-			fi
+		index=${cornerSides[$i]}
+		if [[ ${gameBoard[$index]} != $PLAYER_LETTER ]] || [[ ${gameBoard[$index]} != $COMPUTER_LETTER ]]
+		then
+			temp=1
+			echo $index
+			break
+		fi
 	done
-	echo $temp
+	if [[ $temp -eq 0 ]]
+	then
+			echo $stop
+	fi
 
 }
+
 
 #FOR FINDING ALL POSSIBLE POSITION
 function possiblePosition()
 {
 
 	local row=$(rowPositionHint)
-	if [[ $row -eq 0 ]]
+	if [[ $row -eq $stop ]]
 	then
    	local column=$(columnPositionHint)
-      if [[ $column -eq 0 ]]
-      then
-      	local diagonal=$(diagonalPositionHint)
-      	if [[ $diagonal -eq 0 ]]
-         then
+		if [[ $column -eq $stop ]]
+		then
+			local diagonal=$(diagonalPositionHint)
+			if [[ $diagonal -eq $stop ]]
+			then
 				local corner=$(possibleCorner)
-				if [[ $corner -eq 0 ]]
-   			then
-					randomValue=$(( RANDOM%9+1 ))
-         		echo $randomValue
-         	else
-         		echo $coener
+				if [[ $corner -eq $stop ]]
+				then
+						randomValue=$(( RANDOM%9+1 ))
+						echo $randomValue
+				else
+					echo $corner
 				fi
-   		else
-      		echo $diagonal
-    		fi
-   	else
-   		echo $column
-   	fi
+			else
+				echo $diagonal
+			fi
+		else
+			echo $column
+		fi
 	else
 		echo $row
 	fi
@@ -232,7 +236,7 @@ function getComputerInput()
 	do
 		if [[ ${gameBoard[$i]} -eq $computerPosition ]]
 		then
-			gameBoard[(($computerPosition -1))]=$COMPUTER_LETTER
+			gameBoard[(($computerPosition - 1))]=$COMPUTER_LETTER
 			((count++))
 			flag=0
 			printBoard
