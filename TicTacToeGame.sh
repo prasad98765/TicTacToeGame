@@ -8,36 +8,33 @@ PLAYER_LETTER=""
 COMPUTER_LETTER=""
 TOTAL_POSITION=9
 
-declare -a gameBoard
-
 #VARIABLE
-gameBoard=(	1 2 3 4 5 6 7 8 9 )
-echo "${gameBoard[0]}"
-echo "${gameBoard[1]}"
+declare -a gameBoard
+gameBoard=( 1 2 3 4 5 6 7 8 9 )
+cornerSides=( 1 3 7 9 )
 count=0
 flag=0
 temp=0
 
+#TO PRINT TIC TAC TOE BOARD
 function printBoard()
 {
 
-	echo "               "
 	echo "   ${gameBoard[0]} | ${gameBoard[1]} | ${gameBoard[2]}"
 	echo "  -------------"
 	echo "   ${gameBoard[3]} | ${gameBoard[4]} | ${gameBoard[5]}"
 	echo "  -------------"
 	echo "   ${gameBoard[6]} | ${gameBoard[7]} | ${gameBoard[8]}"
-	echo "               "
 	toAssigningRowColumnDiagonalValue
 
 }
 
-
+#ASSIGNED SYMBOL AS PER TOSS
 function getAssignedSymbol()
 {
 
-   if [ $((RANDOM%2)) -eq 1 ]
-   then
+	if [ $((RANDOM%2)) -eq 1 ]
+	then
 		PLAYER_LETTER="X"
 		COMPUTER_LETTER="O"
 		echo "Player Letter" $PLAYER_LETTER
@@ -55,7 +52,7 @@ function getAssignedSymbol()
 }
 
 
-
+#FOR GET USER INPUT
 function getUserInput()
 {
 
@@ -75,20 +72,20 @@ function getUserInput()
 
 }
 
+#FOR BLOCKING ROW POSITIONS
 function rowPositionHint()
 {
 
 	temp=0
    for (( hintCell=0; hintCell<$TOTAL_POSITION; hintCell=$(($hintCell+3)) ))
    do
-		#echo "$hintCell"
-      if [[ ${gameBoard[$hintCell]} == ${gameBoard[$hintCell+1]} ]]
+  		if [[ ${gameBoard[$hintCell]} == ${gameBoard[$hintCell+1]} ]]
       then
       	temp=1
          echo ${gameBoard[(($hintCell+2))]}
          break
       elif [[ ${gameBoard[$hintCell+1]} == ${gameBoard[$hintCell+2]} ]]
-      then
+		then
          temp=1
          echo ${gameBoard[(($hintCell))]}
          break
@@ -101,11 +98,12 @@ function rowPositionHint()
 	done
 	if [[ $temp -eq 0 ]]
 	then
-			echo $temp
+		echo $temp
 	fi
 
 }
 
+#FOR BLOCKING COLUMN POSITIONS
 function columnPositionHint()
 {
 
@@ -135,6 +133,7 @@ function columnPositionHint()
 
 }
 
+#FOR BLOCKING DIAGONAL POSITIONS
 function diagonalPositionHint()
 {
 
@@ -170,6 +169,24 @@ function diagonalPositionHint()
 
 }
 
+#FOR FINDING ALL POSSIBLE CORNERS
+function possibleCorner()
+{
+	sides=0
+	for (( corners=0; corners<=8; corners++ ))
+	do
+			if [[ ${gameBoard[$corners]} -eq ${cornerSides[$sides]} ]]
+			then
+				echo $corners
+				break
+			else
+				sides=$(( $sides + 1 ))
+			fi
+	done
+	echo $temp
+}
+
+#FOR FINDING ALL POSSIBLE POSITION
 function possiblePosition()
 {
 
@@ -182,21 +199,27 @@ function possiblePosition()
       	local diagonal=$(diagonalPositionHint)
       	if [[ $diagonal -eq 0 ]]
          then
-				randomValue=$(( RANDOM%9+1 ))
-         	echo $randomValue
-         else
-         	echo $diagonal
-			fi
+				local corner=$(possibleCorner)
+				if [[ $corner -eq 0 ]]
+   			then
+					randomValue=$(( RANDOM%9+1 ))
+         		echo $randomValue
+         	else
+         		echo $coener
+				fi
+   		else
+      		echo $diagonal
+    		fi
    	else
-      	echo $column
-    	fi
-   else
-   	echo $row
-   fi
+   		echo $column
+   	fi
+	else
+		echo $row
+	fi
 
 }
 
-
+#TO GET COMPUTER INPUT 
 function getComputerInput()
 {
 
@@ -218,6 +241,7 @@ function getComputerInput()
 
 }
 
+#TO CALL GETUSERINPUT OR GETCOMPUTERINPUT FUNCTION
 function getUserComputerInput()
 {
 
@@ -234,7 +258,7 @@ function getUserComputerInput()
 
 }
 
-
+#TO CHECK WHO IS WIN
 function toCheckMatchOrNot()
 {
 
@@ -251,7 +275,7 @@ function toCheckMatchOrNot()
 
 }
 
-
+#TO ASSIGNED ROW COLUMN DIAGONAL VALUE TO CHECK WIN OR NOT
 function toAssigningRowColumnDiagonalValue()
 {
 
@@ -266,6 +290,7 @@ function toAssigningRowColumnDiagonalValue()
 
 }
 
+#MAIN METHOD
 function main()
 {
 
