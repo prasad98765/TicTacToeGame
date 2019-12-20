@@ -172,6 +172,7 @@ function diagonalPositionHint()
 #FOR FINDING ALL POSSIBLE CORNERS
 function possibleCorner()
 {
+
 	sides=0
 	for (( corners=0; corners<=8; corners++ ))
 	do
@@ -184,6 +185,7 @@ function possibleCorner()
 			fi
 	done
 	echo $temp
+
 }
 
 #FOR FINDING ALL POSSIBLE POSITION
