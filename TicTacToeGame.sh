@@ -15,8 +15,14 @@ cornerSides=( 1 3 7 9 )
 boardSides=( 2 4 6 8 )
 count=0
 flag=0
-temp=1
-stop=50
+temp=0
+choice=0
+row=0
+column=2
+diagonal=3
+corner=4
+center=5
+side=6
 
 #TO PRINT TIC TAC TOE BOARD
 function printBoard()
@@ -79,6 +85,7 @@ function rowPositionHint()
 {
 
 	temp=0
+	temp1=1
    for (( hintCell=0; hintCell<$TOTAL_POSITION; hintCell=$(($hintCell+3)) ))
    do
 		if [[ ${gameBoard[$hintCell]} == ${gameBoard[$hintCell+1]} ]]
@@ -100,7 +107,8 @@ function rowPositionHint()
 	done
 	if [[ $temp -eq 0 ]]
 	then
-		echo $stop
+		choice=2
+		possiblePosition
 	fi
 
 }
@@ -130,7 +138,8 @@ function columnPositionHint()
 	done
 	if [[ $temp -eq 0 ]]
 	then
-		echo $stop
+		choice=3
+		possiblePosition
 	fi
 
 }
@@ -166,7 +175,8 @@ function diagonalPositionHint()
 	fi
 	if [[ $temp -eq 0 ]]
 	then
-		echo $stop
+		choice=4
+		possiblePosition
 	fi
 
 }
@@ -188,7 +198,8 @@ function possibleCorner()
 	done
 	if [[ $temp -eq 0 ]]
 	then
-			echo $stop
+			choice=5
+			possiblePosition
 	fi
 
 }
@@ -201,7 +212,8 @@ function toFindCenter()
 	then
 		echo ${gameBoard[4]}
 	else
-		echo $stop
+		choice=6
+		possiblePosition
 	fi
 
 }
@@ -221,7 +233,8 @@ function possibleSides()
    done
    if [[ $temp -eq 0 ]]
    then
-         echo $stop
+			choice=7
+			possiblePosition
    fi
 
 }
@@ -230,44 +243,30 @@ function possibleSides()
 function possiblePosition()
 {
 
-	local row=$(rowPositionHint)
-	if [[ $row -eq $stop ]]
-	then
-		local column=$(columnPositionHint)
-		if [[ $column -eq $stop ]]
-		then
-			local diagonal=$(diagonalPositionHint)
-			if [[ $diagonal -eq $stop ]]
-			then
-				local corner=$(possibleCorner)
-				if [[ $corner -eq $stop ]]
-				then
-					local center=$(toFindCenter)
-					if [[ $center -eq $stop ]]
-					then
-						local side=$(possibleSides)
-						if [[ $side -eq $stop ]] 
-						then
-							randomValue=$(( RANDOM%9+1 ))
-							echo $randomValue
-						else
-							echo $side
-						fi
-					else
-						echo $center
-					fi
-				else
-					echo $corner
-				fi
-	  		else
-				echo $diagonal
-			fi
-		else
-			echo $column
-		fi
-	else
-		echo $row
-	fi
+	case $choice in
+		$row)
+			position=$(rowPositionHint)
+			;;
+		$column)
+			position=$(columnPositionHint)
+			;;
+		$diagonal)
+			position=$(diagonalPositionHint)
+			;;
+		$corner)
+			position=$(possibleCorner)
+			;;
+		$center)
+			position=$(toFindCenter)
+			;;
+		$side)
+			position=$(possibleSides)
+			;;
+			*)
+			position=$(( RANDOM%9+1 ))
+			;;
+	esac
+	echo $position
 
 }
 
@@ -277,6 +276,7 @@ function getComputerInput()
 
 	echo "Computer Play"
 	computerPosition=$(possiblePosition)
+	echo $computerPosition
 	for (( i=0; i<=8; i++ ))
 	do
 		if [[ ${gameBoard[$i]} -eq $computerPosition ]]
