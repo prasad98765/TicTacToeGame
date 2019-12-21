@@ -12,9 +12,10 @@ TOTAL_POSITION=9
 declare -a gameBoard
 gameBoard=( 1 2 3 4 5 6 7 8 9 )
 cornerSides=( 1 3 7 9 )
+boardSides=( 2 4 6 8 )
 count=0
 flag=0
-temp=0
+temp=1
 stop=50
 
 #TO PRINT TIC TAC TOE BOARD
@@ -205,6 +206,26 @@ function toFindCenter()
 
 }
 
+#FOR FINDING ALL POSSIBLE SIDES
+function possibleSides()
+{
+	for (( i=0; i<4; i++ ))
+   do
+      index=${boardSides[$i]}
+      if [[ ${gameBoard[$index]} != $PLAYER_LETTER ]] || [[ ${gameBoard[$index]} != $COMPUTER_LETTER ]]
+      then
+         temp=1
+         echo $index
+         break
+      fi
+   done
+   if [[ $temp -eq 0 ]]
+   then
+         echo $stop
+   fi
+
+}
+
 #FOR FINDING ALL POSSIBLE POSITION
 function possiblePosition()
 {
@@ -224,16 +245,22 @@ function possiblePosition()
 					local center=$(toFindCenter)
 					if [[ $center -eq $stop ]]
 					then
-						randomValue=$(( RANDOM%9+1 ))
-						echo $randomValue
+						local side=$(possibleSides)
+						if [[ $side -eq $stop ]] 
+						then
+							randomValue=$(( RANDOM%9+1 ))
+							echo $randomValue
+						else
+							echo $side
+						fi
 					else
 						echo $center
 					fi
 				else
 					echo $corner
 				fi
-   		else
-      		echo $diagonal
+	  		else
+				echo $diagonal
 			fi
 		else
 			echo $column
